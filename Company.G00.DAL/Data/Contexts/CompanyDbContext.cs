@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Company.G00.DAL.Data.Contexts
 {
-    internal class CompanyDbContext : DbContext 
+    public class CompanyDbContext : DbContext 
     {
 
         public CompanyDbContext() : base()
