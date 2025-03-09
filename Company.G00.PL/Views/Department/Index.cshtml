@@ -34,8 +34,8 @@
                     <td>@item.Code</td>
                     <td>@item.Name</td>
                     <td>@item.CreateAt</td>
-                    <td><a aps-controller="Department" asp-action="Details" class="btn btn-warning">Deatils</a></td>
-                    <td><a aps-controller="Department" asp-action="Edit" class="btn btn-success">Update</a></td>
+                    <td><a aps-controller="Department" asp-action="Details" asp-route-id="@item.Id" class="btn btn-warning">Deatils</a></td>
+                    <td><a aps-controller="Department" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-success">Update</a></td>
                     <td><a aps-controller="Department" asp-action="Delete" class="btn btn-danger">Delete</a></td>
                 </tr>
           }
