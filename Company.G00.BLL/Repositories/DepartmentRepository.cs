@@ -15,9 +15,10 @@ namespace Company.G00.BLL.Repositories
 
         private readonly CompanyDbContext _context; // Null , ReadOnly For Only Make Only One Connection 
 
-        public DepartmentRepository()
+        // Ask CLR To Create Object 
+        public DepartmentRepository(CompanyDbContext company)
         {
-            _context = new CompanyDbContext(); // Refer To This Instead Of Null 
+            _context = company; // Refer To This Instead Of Null 
         }
 
         public IEnumerable<Department> GetAll()
