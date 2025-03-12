@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Company.G00.DAL.Models
 {
-    public class Employee
+    public class Employee : BaseClass
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
+       public string Name { get; set; }
 
         public int? Age { get; set; }
 
@@ -25,7 +24,5 @@ namespace Company.G00.DAL.Models
        
         public DateTime HiringDate { get; set; }
        
-        public DateTime CreateAt { get; set; }
-
     }
 }
