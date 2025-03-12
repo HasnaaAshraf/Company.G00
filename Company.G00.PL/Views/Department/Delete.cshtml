@@ -1,23 +1,21 @@
-﻿@model DetailsDepartmentDto
-
+﻿@model Department;
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Delete";
 }
 
 <br/>
-
-<h1>Details Page</h1>
+<h1>Delete Page</h1>
 
 <br />
 
-<form asp-action="Details">
+<form asp-action="Delete">
     <div class="mt-4">
         <label asp-for="Code" class="col-form-label"></label>
-        <input asp-for="Code" value="@Model.Code" class="form-control" readonly />
+        <input asp-for="Code"  class="form-control" readonly />
     </div>
     <div class="mt-4">
         <label asp-for="Name" class="col-form-label"></label>
-        <input asp-for="Name" value="@Model.Name" class="form-control" readonly />
+        <input asp-for="Name"  class="form-control" readonly />
     </div>
     <div class="mt-4">
         <label asp-for="CreateAt" class="col-form-label">Date Of Creation </label>
@@ -25,9 +23,8 @@
     </div>
 
     <div>
-        <a asp-action="Edit" asp-controller="Department" class="btn btn-primary mt-3" >Edit</a>
+        <input type="submit" value="Delete" class="btn btn-danger mt-3" />
         <a asp-action="Index" asp-controller="Department" class="mt-3 ms-2 btn btn-light">Back To List</a>
     </div>
 
 </form>
-
