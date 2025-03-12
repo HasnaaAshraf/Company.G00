@@ -14,6 +14,8 @@ namespace Company.G00.DAL.Models
 
         public string Address { get; set; }
 
+        public string Email { get; set; }
+
         public string Phone { get; set; }
 
         public decimal Salary { get; set; }

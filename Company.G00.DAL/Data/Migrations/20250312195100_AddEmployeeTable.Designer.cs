@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Company.G00.DAL.Data.Migrations
 {
     [DbContext(typeof(CompanyDbContext))]
-    [Migration("20250312142047_AddEmployeeTable")]
+    [Migration("20250312195100_AddEmployeeTable")]
     partial class AddEmployeeTable
     {
         /// <inheritdoc />
@@ -66,6 +66,10 @@ namespace Company.G00.DAL.Data.Migrations
 
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("HiringDate")
                         .HasColumnType("datetime2");
