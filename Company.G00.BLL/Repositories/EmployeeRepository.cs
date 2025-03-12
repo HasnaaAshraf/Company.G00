@@ -9,43 +9,43 @@ using Company.G00.DAL.Models;
 
 namespace Company.G00.BLL.Repositories
 {
-    public class EmployeeRepository : IEmployeeRepository
+    public class EmployeeRepository : GenericRepository<Employee>, IEmployeeRepository
     {
 
-        private readonly CompanyDbContext _context;
+        //private readonly CompanyDbContext _context;
 
-        public EmployeeRepository(CompanyDbContext context)
+        public EmployeeRepository(CompanyDbContext context) : base(context)
         {
-            this._context = context;
+            //this._context = context;
         }
 
-        public IEnumerable<Employee> GetAll()
-        {
-            return _context.Employees.ToList();
-        }
+        //public IEnumerable<Employee> GetAll()
+        //{
+        //    return _context.Employees.ToList();
+        //}
 
-        public Employee? Get(int id)
-        {
-            return _context.Employees.Find(id);
-        }
+        //public Employee? Get(int id)
+        //{
+        //    return _context.Employees.Find(id);
+        //}
 
-        public int Add(Employee employee)
-        {
-            _context.Employees.Add(employee);
-            return _context.SaveChanges();
-        }
+        //public int Add(Employee employee)
+        //{
+        //    _context.Employees.Add(employee);
+        //    return _context.SaveChanges();
+        //}
 
-        public int Update(Employee employee)
-        {
-            _context.Employees.Update(employee);
-            return _context.SaveChanges();
-        }
+        //public int Update(Employee employee)
+        //{
+        //    _context.Employees.Update(employee);
+        //    return _context.SaveChanges();
+        //}
 
-        public int Delete(Employee employee)
-        {
-            _context.Employees.Remove(employee);
-            return _context.SaveChanges();
-        }
+        //public int Delete(Employee employee)
+        //{
+        //    _context.Employees.Remove(employee);
+        //    return _context.SaveChanges();
+        //}
 
     }
 }

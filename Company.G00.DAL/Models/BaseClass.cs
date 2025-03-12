@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Company.G00.DAL.Models
 {
-    public class Department : BaseClass
+    public class BaseClass
     {
-     
-        public string Code { get; set; }
 
-        public string Name { get; set; }
+        public int Id { get; set; }
+
+        public DateTime CreateAt { get; set; }
 
     }
 }
