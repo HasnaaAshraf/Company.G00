@@ -10,11 +10,12 @@ namespace Company.G00.PL.Controllers
     public class EmployeeController : Controller
     {
 
-        private readonly IGenericRepository<Employee> _employeeRepository;
+        private readonly IEmployeeRepository _employeeRepository;
 
-        public EmployeeController(IGenericRepository<Employee> employeeRepository)
+        // Ask CLR To Make Object From IEmployeeRepository
+        public EmployeeController(IEmployeeRepository employeeRepository)
         {
-            this._employeeRepository = employeeRepository;
+            _employeeRepository = employeeRepository;
         }
 
         [HttpGet]
@@ -40,6 +41,7 @@ namespace Company.G00.PL.Controllers
                     Name = create.Name,
                     Age = create.Age,
                     Address = create.Address,
+                    Email = create.Email,
                     Phone = create.Phone,
                     Salary = create.Salary,
                     IsActive = create.IsActive,
@@ -49,9 +51,10 @@ namespace Company.G00.PL.Controllers
                 };
 
                 var Count = _employeeRepository.Add(employee);
+
                 if (Count > 0)
                 {
-                    RedirectToAction("Index");
+                  return RedirectToAction("Index");
                 }
             }
             return View(create);
@@ -61,7 +64,9 @@ namespace Company.G00.PL.Controllers
         public IActionResult Details(int? id, string viewName = "Details")
         {
             if (id is null) return BadRequest($" This Id = {id} InValid");
+
             var employee = _employeeRepository.Get(id.Value);
+
             if (employee is null)
             {
                 return NotFound($"This Id {id} Not Found");
