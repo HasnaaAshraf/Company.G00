@@ -64,6 +64,10 @@ namespace Company.G00.DAL.Data.Migrations
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("HiringDate")
                         .HasColumnType("datetime2");
 

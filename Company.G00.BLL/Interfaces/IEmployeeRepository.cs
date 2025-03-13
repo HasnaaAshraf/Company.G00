@@ -7,7 +7,7 @@ using Company.G00.DAL.Models;
 
 namespace Company.G00.BLL.Interfaces
 {
-    internal interface IEmployeeRepository : IGenericRepository<Employee>
+    public interface IEmployeeRepository : IGenericRepository<Employee>
     {
         //IEnumerable<Employee> GetAll();
 

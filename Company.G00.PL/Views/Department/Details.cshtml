@@ -1,4 +1,4 @@
-﻿@model DetailsDepartmentDto
+﻿@model Department
 
 @{
     ViewData["Title"] = "Details";
@@ -13,11 +13,11 @@
 <form asp-action="Details">
     <div class="mt-4">
         <label asp-for="Code" class="col-form-label"></label>
-        <input asp-for="Code" value="@Model.Code" class="form-control" readonly />
+        <input asp-for="Code" class="form-control" readonly />
     </div>
     <div class="mt-4">
         <label asp-for="Name" class="col-form-label"></label>
-        <input asp-for="Name" value="@Model.Name" class="form-control" readonly />
+        <input asp-for="Name" class="form-control" readonly />
     </div>
     <div class="mt-4">
         <label asp-for="CreateAt" class="col-form-label">Date Of Creation </label>

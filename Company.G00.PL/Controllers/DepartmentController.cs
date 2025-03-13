@@ -31,6 +31,7 @@ namespace Company.G00.PL.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(CreateDepartmentDto model)
         {
             if (ModelState.IsValid) // Server Side Validation 
@@ -55,94 +56,139 @@ namespace Company.G00.PL.Controllers
         }
 
 
-        [HttpGet]
-        public IActionResult Details(int id)
-        {
-            var departmentDetails = _departmentRepository.Get(id);
-
-            if(departmentDetails == null)
-            {
-                ViewBag.Message = "Department Details Not Found";
-                return View("Not Found Data");
-            }
-
-            var dto = new DetailsDepartmentDto
-            {
-                Code = departmentDetails.Code,
-                Name = departmentDetails.Name,
-                CreateAt = departmentDetails.CreateAt
-            };
-
-            return View(dto);
-
-        }
-
-        // Another Solution For Details
-
         //[HttpGet]
         //public IActionResult Details(int id)
         //{
-        //    if (id == null) BadRequest("Invalid Id"); // 400
-
         //    var departmentDetails = _departmentRepository.Get(id);
 
-        //    if (departmentDetails == null)
+        //    if(departmentDetails == null)
         //    {
-        //        return NotFound(new { StatusCode = 404, message = "Not Found Data" }); // Built In Not Found Method 
+        //        ViewBag.Message = "Department Details Not Found";
+        //        return View("Not Found Data");
         //    }
 
-        //    return View(departmentDetails);
+        //    var dto = new DetailsDepartmentDto
+        //    {
+        //        Code = departmentDetails.Code,
+        //        Name = departmentDetails.Name,
+        //        CreateAt = departmentDetails.CreateAt
+        //    };
+
+        //    return View(dto);
 
         //}
+
+        // Another Solution For Details
+
+        [HttpGet]
+        public IActionResult Details(int? id, string viewName = "Details")
+        {
+            if (id is null) BadRequest("Invalid Id"); // 400
+
+            var departmentDetails = _departmentRepository.Get(id.Value);
+
+            if (departmentDetails is null)
+            {
+                return NotFound(new { StatusCode = 404, message = "Not Found Data" }); // Built In Not Found Method 
+            }
+
+            return View(viewName, departmentDetails);
+
+        }
 
 
 
         [HttpGet]
-        public IActionResult Edit(int id)
+        public IActionResult Edit(int id )
         {
-            var department = _departmentRepository.Get(id);
+            //var department = _departmentRepository.Get(id);
 
-            if (department == null)
-            {
-                return NotFound("Not Found Data");
-            }
+            //if (department == null)
+            //{
+            //    return NotFound("Not Found Data");
+            //}
 
-             var dto = new UpdateDepartmentDto()
-             {
-                Code = department.Code,
-                Name = department.Name,
-                CreateAt = department.CreateAt
-             };
+            //var dto = new UpdateDepartmentDto()
+            //{
+            //    Code = department.Code,
+            //    Name = department.Name,
+            //    CreateAt = department.CreateAt
+            //};
 
 
-               return View(dto);
+            return Details(id,"Edit");
         }
+
 
         [HttpPost]
-        public IActionResult Edit(UpdateDepartmentDto model)
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit([FromRoute] int id, Department department)
         {
-            if (ModelState.IsValid) // Server Side Validation 
+            if (ModelState.IsValid)
             {
-                var department = new Department()
-                {
-                    Code = model.Code,
-                    Name = model.Name,
-                    CreateAt = model.CreateAt
-                };
 
-                var count = _departmentRepository.Update(department);
+                if (id != department.Id) return BadRequest($" This Id = {id} InValid");
 
-                if (count > 0)
+                var Count = _departmentRepository.Update(department);
+                if (Count > 0)
                 {
-                    return RedirectToAction(nameof(Index));
+                   return RedirectToAction(nameof(Index));
                 }
-
             }
+            return View(department);
+        }
 
-            return View(model);
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult Edit([FromRoute] int id, UpdateDepartmentDto department)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+
+        //        //if (id is null) return BadRequest($" This Id = {id} InValid");
+
+        //        var departmentUpdate = new Department()
+        //        {
+        //            Id = id,
+        //            Code = department.Code,
+        //            Name= department.Name,
+        //            CreateAt = department.CreateAt
+        //        };
+
+        //        var Count = _departmentRepository.Update(departmentUpdate);
+        //        if (Count > 0)
+        //        {
+        //            RedirectToAction("Index");
+        //        }
+        //    }
+        //    return View(department);
+        //}
+
+
+        [HttpGet]
+        public IActionResult Delete(int? id)
+        {
+        
+            return Details(id, "Delete");
         }
 
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete([FromRoute] int? id, Department department)
+        {
+            if (ModelState.IsValid)
+            {
+                if (id is null) return BadRequest($" This Id = {id} InValid");
+
+                var Count = _departmentRepository.Delete(department);
+                if (Count > 0)
+                {
+                   return RedirectToAction("Index");
+                }
+            }
+            return View(department);
+        }
 
     }
 
