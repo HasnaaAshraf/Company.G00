@@ -82,7 +82,7 @@ namespace Company.G00.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute]int? id , Employee employee)
+        public IActionResult Edit([FromRoute]int? id , CreateEmployeeDto employee)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +91,7 @@ namespace Company.G00.PL.Controllers
                 var Count = _employeeRepository.Update(employee);
                 if (Count > 0)
                 {
-                    RedirectToAction("Index");
+                  return RedirectToAction("Index");
                 }
             }
             return View(employee);
@@ -115,7 +115,7 @@ namespace Company.G00.PL.Controllers
                 var Count = _employeeRepository.Delete(employee);
                 if (Count > 0)
                 {
-                    RedirectToAction("Index");
+                   return RedirectToAction("Index");
                 }
             }
             return View(employee);
