@@ -9,21 +9,11 @@
 <br />
 
 <form asp-action="Delete">
-    <div class="mt-4">
-        <label asp-for="Code" class="col-form-label"></label>
-        <input asp-for="Code"  class="form-control" readonly />
-    </div>
-    <div class="mt-4">
-        <label asp-for="Name" class="col-form-label"></label>
-        <input asp-for="Name"  class="form-control" readonly />
-    </div>
-    <div class="mt-4">
-        <label asp-for="CreateAt" class="col-form-label">Date Of Creation </label>
-        <input asp-for="CreateAt" class="form-control" readonly />
-    </div>
+ 
+    <partial name="DepartmentPartialView/_DetailsDeletePartialView" />
 
     <div>
-        <input type="submit" value="Delete" class="btn btn-danger mt-3" />
+        <input type="submit" value="Delete" class="btn btn-outline-danger mt-3" />
         <a asp-action="Index" asp-controller="Department" class="mt-3 ms-2 btn btn-light">Back To List</a>
     </div>
 
