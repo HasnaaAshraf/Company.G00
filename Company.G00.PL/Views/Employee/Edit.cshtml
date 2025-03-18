@@ -1,4 +1,4 @@
-﻿@model Employee
+﻿@model CreateEmployeeDto;
 
 @{
     ViewData["Title"] = "Edit";
@@ -12,7 +12,7 @@
 
 <form asp-action="Edit">
 
-     <partial name="EmployeePartialView/_Create,EditPartialView" />
+    <partial name="EmployeePartialView/_CreateAndEditPartialView" />
 
     <div>
         <input type="submit" value="Save" class="btn btn-outline-primary mt-3" />

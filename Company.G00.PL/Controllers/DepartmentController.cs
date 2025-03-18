@@ -99,35 +99,43 @@ namespace Company.G00.PL.Controllers
 
 
         [HttpGet]
-        public IActionResult Edit(int id )
+        public IActionResult Edit(int? id )
         {
-            //var department = _departmentRepository.Get(id);
+            if (id is null) BadRequest("Invalid Id"); // 400
 
-            //if (department == null)
-            //{
-            //    return NotFound("Not Found Data");
-            //}
+            var departmentDetails = _departmentRepository.Get(id.Value);
 
-            //var dto = new UpdateDepartmentDto()
-            //{
-            //    Code = department.Code,
-            //    Name = department.Name,
-            //    CreateAt = department.CreateAt
-            //};
+            if (departmentDetails is null)
+            {
+                return NotFound(new { StatusCode = 404, message = "Not Found Data" }); // Built In Not Found Method 
+            }
 
+            var dto = new CreateDepartmentDto()
+            {
+                Code = departmentDetails.Code,
+                Name = departmentDetails.Name,
+                CreateAt = departmentDetails.CreateAt
+            };
 
-            return Details(id,"Edit");
+            return View(dto);
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, Department department)
+        public IActionResult Edit([FromRoute] int id, CreateDepartmentDto model)
         {
             if (ModelState.IsValid)
             {
 
-                if (id != department.Id) return BadRequest($" This Id = {id} InValid");
+                //if (id != department.Id) return BadRequest($" This Id = {id} InValid");
+
+                var department = new Department()
+                {
+                    Code = model.Code,
+                    Name = model.Name,
+                    CreateAt = model.CreateAt
+                };
 
                 var Count = _departmentRepository.Update(department);
                 if (Count > 0)
@@ -135,7 +143,7 @@ namespace Company.G00.PL.Controllers
                    return RedirectToAction(nameof(Index));
                 }
             }
-            return View(department);
+            return View(model);
         }
 
         //[HttpPost]
