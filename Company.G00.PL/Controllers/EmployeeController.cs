@@ -12,23 +12,38 @@ namespace Company.G00.PL.Controllers
     {
 
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IDepartmentRepository _departmentRepository;
 
         // Ask CLR To Make Object From IEmployeeRepository
-        public EmployeeController(IEmployeeRepository employeeRepository)
+        public EmployeeController(IEmployeeRepository employeeRepository , IDepartmentRepository departmentRepository)
         {
             _employeeRepository = employeeRepository;
+            _departmentRepository = departmentRepository;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
             var employee = _employeeRepository.GetAll();
+            // Dictionary : 3 Prop 
+            // View Data : Transfer Extra Data From Controller (Action ) To View
+
+            //ViewData["Message"] = "Hello From View Data";
+
+            // View Bag  : Transfer Extra Data From Controller (Action ) To View
+
+            //ViewBag.Message = "Hello From View Bag";
+            //ViewBag.Message = new { "Hello From View Bag" };
+
+            // Temp Data .
             return View(employee);
         }
 
         [HttpGet]
         public IActionResult Create()
         {
+            var department = _departmentRepository.GetAll();
+            ViewData["department"] = department;
             return View();
         }
 
@@ -48,13 +63,15 @@ namespace Company.G00.PL.Controllers
                     IsActive = create.IsActive,
                     IsDeleted = create.IsDeleted,
                     HiringDate = create.HiringDate,
-                    CreateAt = create.CreateAt
+                    CreateAt = create.CreateAt,
+                    DepartmentId = create.DepartmentId
                 };
 
                 var Count = _employeeRepository.Add(employee);
 
                 if (Count > 0)
                 {
+                    TempData["Message"] = "Employee Is Created ";
                   return RedirectToAction("Index");
                 }
             }
@@ -78,7 +95,8 @@ namespace Company.G00.PL.Controllers
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-
+            var department = _departmentRepository.GetAll();
+            ViewData["department"] = department;
             if (id is null) return BadRequest($" This Id = {id} InValid");
 
             var employee = _employeeRepository.Get(id.Value);
@@ -125,7 +143,8 @@ namespace Company.G00.PL.Controllers
                     IsActive = model.IsActive,
                     IsDeleted = model.IsDeleted,
                     HiringDate = model.HiringDate,
-                    CreateAt = model.CreateAt
+                    CreateAt = model.CreateAt,
+                    DepartmentId = model.DepartmentId
                 };
 
                 var Count = _employeeRepository.Update(employee);
