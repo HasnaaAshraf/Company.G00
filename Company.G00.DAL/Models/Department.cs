@@ -13,5 +13,7 @@ namespace Company.G00.DAL.Models
 
         public string Name { get; set; }
 
+        public List<Employee> Employees { get; set; }
+
     }
 }
