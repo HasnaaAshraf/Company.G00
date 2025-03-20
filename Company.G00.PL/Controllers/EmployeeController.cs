@@ -1,4 +1,6 @@
-﻿using Company.G00.BLL.Interfaces;
+﻿using System.Collections;
+using AutoMapper;
+using Company.G00.BLL.Interfaces;
 using Company.G00.DAL.Models;
 using Company.G00.PL.Dtos;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -12,19 +14,32 @@ namespace Company.G00.PL.Controllers
     {
 
         private readonly IEmployeeRepository _employeeRepository;
-        private readonly IDepartmentRepository _departmentRepository;
+        //private readonly IDepartmentRepository _departmentRepository;
+        private readonly IMapper _mapper;
 
         // Ask CLR To Make Object From IEmployeeRepository
-        public EmployeeController(IEmployeeRepository employeeRepository , IDepartmentRepository departmentRepository)
+        public EmployeeController(
+            IEmployeeRepository employeeRepository
+          , IDepartmentRepository departmentRepository,
+             IMapper mapper)
         {
             _employeeRepository = employeeRepository;
-            _departmentRepository = departmentRepository;
+            //_departmentRepository = departmentRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(string? SearchInput)
         {
-            var employee = _employeeRepository.GetAll();
+            IEnumerable<Employee> employee;
+            if (string.IsNullOrEmpty(SearchInput))
+            {
+                employee = _employeeRepository.GetAll();
+            }else
+            {
+                employee = _employeeRepository.GetByName(SearchInput);
+            }
+            
             // Dictionary : 3 Prop 
             // View Data : Transfer Extra Data From Controller (Action ) To View
 
@@ -42,8 +57,8 @@ namespace Company.G00.PL.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            var department = _departmentRepository.GetAll();
-            ViewData["department"] = department;
+            //var department = _departmentRepository.GetAll();
+            //ViewData["department"] = department;
             return View();
         }
 
@@ -52,20 +67,23 @@ namespace Company.G00.PL.Controllers
         {
             if (ModelState.IsValid)
             {
-                var employee = new Employee()
-                {
-                    Name = create.Name,
-                    Age = create.Age,
-                    Address = create.Address,
-                    Email = create.Email,
-                    Phone = create.Phone,
-                    Salary = create.Salary,
-                    IsActive = create.IsActive,
-                    IsDeleted = create.IsDeleted,
-                    HiringDate = create.HiringDate,
-                    CreateAt = create.CreateAt,
-                    DepartmentId = create.DepartmentId
-                };
+                // Manual Mapping
+                //var employee = new Employee()
+                //{
+                //    Name = create.Name,
+                //    Age = create.Age,
+                //    Address = create.Address,
+                //    Email = create.Email,
+                //    Phone = create.Phone,
+                //    Salary = create.Salary,
+                //    IsActive = create.IsActive,
+                //    IsDeleted = create.IsDeleted,
+                //    HiringDate = create.HiringDate,
+                //    CreateAt = create.CreateAt,
+                //    DepartmentId = create.DepartmentId
+                //};
+
+                var employee = _mapper.Map<Employee>(create);
 
                 var Count = _employeeRepository.Add(employee);
 
@@ -95,8 +113,8 @@ namespace Company.G00.PL.Controllers
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-            var department = _departmentRepository.GetAll();
-            ViewData["department"] = department;
+            //var department = _departmentRepository.GetAll();
+            //ViewData["department"] = department;
             if (id is null) return BadRequest($" This Id = {id} InValid");
 
             var employee = _employeeRepository.Get(id.Value);
@@ -106,19 +124,21 @@ namespace Company.G00.PL.Controllers
                 return NotFound($"This Id {id} Not Found");
             }
 
-            var employeeDto = new CreateEmployeeDto()
-            {
-                Name = employee.Name,
-                Age = employee.Age,
-                Address = employee.Address,
-                Email = employee.Email,
-                Phone = employee.Phone,
-                Salary = employee.Salary,
-                IsActive = employee.IsActive,
-                IsDeleted = employee.IsDeleted,
-                HiringDate = employee.HiringDate,
-                CreateAt = employee.CreateAt
-            };
+            //var employeeDto = new CreateEmployeeDto()
+            //{
+            //    Name = employee.Name,
+            //    Age = employee.Age,
+            //    Address = employee.Address,
+            //    Email = employee.Email,
+            //    Phone = employee.Phone,
+            //    Salary = employee.Salary,
+            //    IsActive = employee.IsActive,
+            //    IsDeleted = employee.IsDeleted,
+            //    HiringDate = employee.HiringDate,
+            //    CreateAt = employee.CreateAt
+            //};
+
+            var employeeDto = _mapper.Map<CreateEmployeeDto>(employee);
 
             return View(employeeDto);
         }
