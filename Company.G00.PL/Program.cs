@@ -1,3 +1,4 @@
+using Company.G00.BLL;
 using Company.G00.BLL.Interfaces;
 using Company.G00.BLL.Repositories;
 using Company.G00.DAL.Data.Contexts;
@@ -16,8 +17,10 @@ namespace Company.G00.PL
             // Add services to the container.
             builder.Services.AddControllersWithViews(); // Register Built-In MVC Services
 
-            builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>(); // Alow DI For DepartmentRepository
+            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); // Alow DI For DepartmentRepository
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>(); // Alow DI For EmployeeRepository
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Services.AddDbContext<CompanyDbContext>(options =>
             {

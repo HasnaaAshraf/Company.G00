@@ -45,5 +45,11 @@ namespace Company.G00.PL.Dtos
 
         public int? DepartmentId { get; set; }
 
+        public string? DepartmentName { get; set; }
+
+        public string? ImageName { get; set; }
+
+        public Microsoft.AspNetCore.Http.IFormFile? Image { get; set; }
+
     }
 }

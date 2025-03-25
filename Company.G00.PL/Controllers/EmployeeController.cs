@@ -3,6 +3,7 @@ using AutoMapper;
 using Company.G00.BLL.Interfaces;
 using Company.G00.DAL.Models;
 using Company.G00.PL.Dtos;
+using Company.G00.PL.Helpers;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -13,31 +14,35 @@ namespace Company.G00.PL.Controllers
     public class EmployeeController : Controller
     {
 
-        private readonly IEmployeeRepository _employeeRepository;
+        //private readonly IEmployeeRepository _employeeRepository;
+        private readonly IUnitOfWork _unitOfWork;
+
         //private readonly IDepartmentRepository _departmentRepository;
         private readonly IMapper _mapper;
 
         // Ask CLR To Make Object From IEmployeeRepository
         public EmployeeController(
-            IEmployeeRepository employeeRepository
-          , IDepartmentRepository departmentRepository,
+          //  IEmployeeRepository employeeRepository
+          //, IDepartmentRepository departmentRepository,
+             IUnitOfWork unitOfWork,
              IMapper mapper)
         {
-            _employeeRepository = employeeRepository;
+            //_employeeRepository = employeeRepository;
+            _unitOfWork = unitOfWork;
             //_departmentRepository = departmentRepository;
             _mapper = mapper;
         }
 
         [HttpGet]
-        public IActionResult Index(string? SearchInput)
+        public async Task<IActionResult> Index(string? SearchInput)
         {
             IEnumerable<Employee> employee;
             if (string.IsNullOrEmpty(SearchInput))
             {
-                employee = _employeeRepository.GetAll();
+                employee = await _unitOfWork.EmployeeRepository.GetAllAsync();
             }else
             {
-                employee = _employeeRepository.GetByName(SearchInput);
+                employee = await _unitOfWork.EmployeeRepository.GetByNameAsync(SearchInput);
             }
             
             // Dictionary : 3 Prop 
@@ -63,7 +68,7 @@ namespace Company.G00.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CreateEmployeeDto create)
+        public async Task<IActionResult> Create(CreateEmployeeDto create)
         {
             if (ModelState.IsValid)
             {
@@ -83,9 +88,17 @@ namespace Company.G00.PL.Controllers
                 //    DepartmentId = create.DepartmentId
                 //};
 
+                
+                if(create.Image is not null)
+                {
+                   create.ImageName =  DocumentSettings.UploadFile(create.Image, "images");
+                }
+
                 var employee = _mapper.Map<Employee>(create);
 
-                var Count = _employeeRepository.Add(employee);
+                await _unitOfWork.EmployeeRepository.AddAsync(employee);
+
+                var Count = await _unitOfWork.CompleteAsync();
 
                 if (Count > 0)
                 {
@@ -97,11 +110,11 @@ namespace Company.G00.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Details(int? id, string viewName = "Details")
+        public async Task<IActionResult> Details(int? id, string viewName = "Details")
         {
             if (id is null) return BadRequest($" This Id = {id} InValid");
 
-            var employee = _employeeRepository.Get(id.Value);
+            var employee = await _unitOfWork.EmployeeRepository.GetAsync(id.Value);
 
             if (employee is null)
             {
@@ -111,13 +124,13 @@ namespace Company.G00.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             //var department = _departmentRepository.GetAll();
             //ViewData["department"] = department;
             if (id is null) return BadRequest($" This Id = {id} InValid");
 
-            var employee = _employeeRepository.Get(id.Value);
+            var employee = await _unitOfWork.EmployeeRepository.GetAsync(id.Value);
 
             if (employee is null)
             {
@@ -145,11 +158,21 @@ namespace Company.G00.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute]int id , CreateEmployeeDto model)
+        public async Task<IActionResult> Edit([FromRoute]int id , CreateEmployeeDto model)
         {
             if (ModelState.IsValid)
             {
                 //if (id is null) return BadRequest($" This Id = {id} InValid");
+
+                if(model.ImageName is not null && model.Image is not null)
+                {
+                    DocumentSettings.Delete(model.ImageName, "images");
+                }
+
+                if(model.Image is not null)
+                {
+                   model.ImageName = DocumentSettings.UploadFile(model.Image, "images");
+                }
 
                 var employee = new Employee()
                 {
@@ -164,10 +187,14 @@ namespace Company.G00.PL.Controllers
                     IsDeleted = model.IsDeleted,
                     HiringDate = model.HiringDate,
                     CreateAt = model.CreateAt,
-                    DepartmentId = model.DepartmentId
+                    DepartmentId = model.DepartmentId,
+                    ImageName = model.ImageName,
+                    
                 };
 
-                var Count = _employeeRepository.Update(employee);
+                 _unitOfWork.EmployeeRepository.Update(employee);
+
+                var Count = await _unitOfWork.CompleteAsync();
 
                 if (Count > 0)
                 {
@@ -179,25 +206,33 @@ namespace Company.G00.PL.Controllers
 
 
         [HttpGet]
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            return Details(id, "Delete");
+            return await Details(id, "Delete");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete([FromRoute] int? id, Employee employee)
+        public async Task<IActionResult> Delete([FromRoute] int? id, Employee employee)
         {
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 if (id is null) return BadRequest($" This Id = {id} InValid");
 
-                var Count = _employeeRepository.Delete(employee);
+            var departmentDelete = await _unitOfWork.EmployeeRepository.GetAsync(id.Value);
+            _unitOfWork.EmployeeRepository.Delete(departmentDelete);
+
+            var Count = await _unitOfWork.CompleteAsync();
+
                 if (Count > 0)
                 {
+                   if(employee.ImageName is not null)
+                   {
+                      DocumentSettings.Delete(employee.ImageName,"images");
+                   }
                    return RedirectToAction("Index");
                 }
-            }
+            //}
             return View(employee);
         }
 
