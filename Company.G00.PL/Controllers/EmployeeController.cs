@@ -4,6 +4,7 @@ using Company.G00.BLL.Interfaces;
 using Company.G00.DAL.Models;
 using Company.G00.PL.Dtos;
 using Company.G00.PL.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -11,6 +12,8 @@ using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 
 namespace Company.G00.PL.Controllers
 {
+
+    [Authorize]
     public class EmployeeController : Controller
     {
 
@@ -158,41 +161,42 @@ namespace Company.G00.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([FromRoute]int id , CreateEmployeeDto model)
+        public async Task<IActionResult> Edit([FromRoute] int id, CreateEmployeeDto model)
         {
             if (ModelState.IsValid)
             {
                 //if (id is null) return BadRequest($" This Id = {id} InValid");
 
-                if(model.ImageName is not null && model.Image is not null)
+
+                var employee = await _unitOfWork.EmployeeRepository.GetAsync(id);
+                if (employee == null)
+                {
+                    return NotFound();
+                }
+
+                if (model.ImageName is not null && model.Image is not null)
                 {
                     DocumentSettings.Delete(model.ImageName, "images");
                 }
 
-                if(model.Image is not null)
+                if (model.Image is not null)
                 {
-                   model.ImageName = DocumentSettings.UploadFile(model.Image, "images");
+                    model.ImageName = DocumentSettings.UploadFile(model.Image, "images");
                 }
 
-                var employee = new Employee()
-                {
-                    Id = id,
-                    Name = model.Name,
-                    Age = model.Age,
-                    Address = model.Address,
-                    Email = model.Email,
-                    Phone = model.Phone,
-                    Salary = model.Salary,
-                    IsActive = model.IsActive,
-                    IsDeleted = model.IsDeleted,
-                    HiringDate = model.HiringDate,
-                    CreateAt = model.CreateAt,
-                    DepartmentId = model.DepartmentId,
-                    ImageName = model.ImageName,
-                    
-                };
+                employee.Name = model.Name;
+                employee.Age = model.Age;
+                employee.Address = model.Address;
+                employee.Email = model.Email;
+                employee.Phone = model.Phone;
+                employee.Salary = model.Salary;
+                employee.IsActive = model.IsActive;
+                employee.IsDeleted = model.IsDeleted;
+                employee.HiringDate = model.HiringDate;
+                employee.CreateAt = model.CreateAt;
+                employee.DepartmentId = model.DepartmentId;
 
-                 _unitOfWork.EmployeeRepository.Update(employee);
+                _unitOfWork.EmployeeRepository.Update(employee);
 
                 var Count = await _unitOfWork.CompleteAsync();
 
@@ -203,6 +207,61 @@ namespace Company.G00.PL.Controllers
             }
             return View(model);
         }
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit([FromRoute] int id, CreateEmployeeDto model)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View(model);
+        //    }
+
+        //    // ✅ 1️⃣ جلب الموظف القديم من الداتا بيز
+        //    var employee = await _unitOfWork.EmployeeRepository.GetAsync(id);
+        //    if (employee == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    // ✅ 2️⃣ تحديث الصورة فقط لو المستخدم رفع صورة جديدة
+        //    if (model.Image != null)
+        //    {
+        //        // حذف الصورة القديمة لو موجودة
+        //        if (!string.IsNullOrEmpty(employee.ImageName))
+        //        {
+        //            DocumentSettings.Delete(employee.ImageName, "images");
+        //        }
+
+        //        // رفع الصورة الجديدة **وحفظ اسمها في الداتا بيز**
+        //        employee.ImageName = DocumentSettings.UploadFile(model.Image, "images");
+        //    }
+
+        //    // ✅ 3️⃣ تحديث باقي بيانات الموظف
+        //    employee.Name = model.Name;
+        //    employee.Age = model.Age;
+        //    employee.Address = model.Address;
+        //    employee.Email = model.Email;
+        //    employee.Phone = model.Phone;
+        //    employee.Salary = model.Salary;
+        //    employee.IsActive = model.IsActive;
+        //    employee.IsDeleted = model.IsDeleted;
+        //    employee.HiringDate = model.HiringDate;
+        //    employee.CreateAt = model.CreateAt;
+        //    employee.DepartmentId = model.DepartmentId;
+
+        //    // ✅ 4️⃣ حفظ التعديلات في الداتا بيز
+        //    _unitOfWork.EmployeeRepository.Update(employee);
+        //    var count = await _unitOfWork.CompleteAsync();
+
+        //    if (count > 0)
+        //    {
+        //        return RedirectToAction("Index");
+        //    }
+
+        //    return View(model);
+        //}
+
 
 
         [HttpGet]
