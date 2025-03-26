@@ -2,11 +2,14 @@
 using Company.G00.BLL.Repositories;
 using Company.G00.DAL.Models;
 using Company.G00.PL.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Protocol.Plugins;
 
 namespace Company.G00.PL.Controllers
 {
+
+    [Authorize]
     public class DepartmentController : Controller
     {
         //private readonly IDepartmentRepository _departmentRepository;

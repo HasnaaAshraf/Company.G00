@@ -2,8 +2,10 @@ using Company.G00.BLL;
 using Company.G00.BLL.Interfaces;
 using Company.G00.BLL.Repositories;
 using Company.G00.DAL.Data.Contexts;
+using Company.G00.DAL.Models;
 using Company.G00.PL.mapping;
 using Company.G00.PL.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Company.G00.PL
@@ -46,6 +48,14 @@ namespace Company.G00.PL
             // Allow CLR To Make Obj For EmploeeProfile (Mapper):
             builder.Services.AddAutoMapper(M=> M.AddProfile(new EmployeeProfile()));  //Must Inherit From Profile 
 
+            builder.Services.AddIdentity<AppUser, IdentityRole>()
+                            .AddEntityFrameworkStores<CompanyDbContext>();  // Allow User , Role , Authentication , EntityFrameworkStores.
+
+            builder.Services.ConfigureApplicationCookie(config =>
+            {
+                config.LoginPath = "/Account/SignIn";
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -60,6 +70,9 @@ namespace Company.G00.PL
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
            
             app.MapControllerRoute(

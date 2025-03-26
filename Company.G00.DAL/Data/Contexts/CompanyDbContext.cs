@@ -5,11 +5,13 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Company.G00.DAL.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Company.G00.DAL.Data.Contexts
 {
-    public class CompanyDbContext : DbContext 
+    public class CompanyDbContext : IdentityDbContext<AppUser>
     {
 
         public CompanyDbContext(DbContextOptions<CompanyDbContext> options) : base(options)
@@ -33,7 +35,6 @@ namespace Company.G00.DAL.Data.Contexts
         public DbSet<Department> Departments { get; set; }
 
         public DbSet<Employee> Employees { get; set; }
-
 
     }
 }
