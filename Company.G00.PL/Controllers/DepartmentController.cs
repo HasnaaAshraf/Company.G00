@@ -9,7 +9,7 @@ using NuGet.Protocol.Plugins;
 namespace Company.G00.PL.Controllers
 {
 
-    [Authorize(Roles="Hasnaaa")]
+   
     public class DepartmentController : Controller
     {
         //private readonly IDepartmentRepository _departmentRepository;
@@ -130,6 +130,7 @@ namespace Company.G00.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit([FromRoute] int id, CreateDepartmentDto model)
         {
             if (ModelState.IsValid)
@@ -193,6 +194,7 @@ namespace Company.G00.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete([FromRoute] int? id, Department department)
         {
             //if (ModelState.IsValid)
