@@ -60,7 +60,7 @@ namespace Company.G00.PL.Controllers
         {
             if (id is null) return BadRequest($" This Id = {id} InValid");
 
-            var user = await _userManager.FindByEmailAsync(id);
+            var user = await _userManager.FindByIdAsync(id);
 
             if (user is null)
             {

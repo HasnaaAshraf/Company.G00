@@ -63,6 +63,23 @@ namespace Company.G00.PL.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> RealSearch(string? SearchInput)
+        {
+            IEnumerable<Employee> employee;
+            if (string.IsNullOrEmpty(SearchInput))
+            {
+                employee = await _unitOfWork.EmployeeRepository.GetAllAsync();
+            }
+            else
+            {
+                employee = await _unitOfWork.EmployeeRepository.GetByNameAsync(SearchInput);
+            }
+
+            return PartialView("EmployeePartialView/EmployeeRealTimeSearchPartialView", employee);
+        }
+
+
+        [HttpGet]
         public IActionResult Create()
         {
             //var department = _departmentRepository.GetAll();
@@ -161,6 +178,7 @@ namespace Company.G00.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit([FromRoute] int id, CreateEmployeeDto model)
         {
             if (ModelState.IsValid)
@@ -271,6 +289,7 @@ namespace Company.G00.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete([FromRoute] int? id, Employee employee)
         {
             //if (ModelState.IsValid)

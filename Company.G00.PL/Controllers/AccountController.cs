@@ -3,6 +3,9 @@ using Company.G00.DAL.Sms;
 using Company.G00.PL.Dtos;
 using Company.G00.PL.Helpers;
 using Company.G00.PL.InterfacesHelpers;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -140,6 +143,34 @@ namespace Company.G00.PL.Controllers
             return RedirectToAction(nameof(SignIn));
         }
 
+        //public async Task<IActionResult> SignOut()
+
+        //{
+
+        //    // Sign out of your application
+
+        //    await _signInManager.SignOutAsync();
+
+        //    // Sign out of Google authentication and redirect back to the sign-in page
+
+        //    return SignOut(
+
+        //        new AuthenticationProperties
+
+        //        {
+
+        //            RedirectUri = Url.Action(nameof(SignIn))
+
+        //        },
+
+        //        "Google",
+
+        //        IdentityConstants.ApplicationScheme
+
+        //    );
+
+        //}
+
         #endregion
 
         #region Forget Password 
@@ -225,7 +256,9 @@ namespace Company.G00.PL.Controllers
                     // Create URL 
                     // https://localhost:44314/Account/ResetPassword
 
-                    var url = Url.Action("ResetPassword", "Account", new { model.Email, Token }, Request.Scheme);
+                    //var url = Url.Action("ResetPassword", "Account", new { model.Email, Token }, Request.Scheme);
+
+                    var url = Url.Action("ResetPassword", "Account", new { email = model.Email, Token }, Request.Scheme);
 
                     // Create Sms 
 
@@ -268,6 +301,12 @@ namespace Company.G00.PL.Controllers
             return View();
         }
 
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
+
         #endregion
 
         #region Reset Password 
@@ -309,6 +348,68 @@ namespace Company.G00.PL.Controllers
             return View(model);
         }
 
+
+        #endregion
+
+        #region Google Login
+
+        [HttpGet]
+        public IActionResult GoogleLogin()
+        {
+            var prop = new AuthenticationProperties()
+            {
+                RedirectUri = Url.Action("GoogleResponse")
+            };
+            return Challenge(prop, GoogleDefaults.AuthenticationScheme);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GoogleResponse()
+        {
+            var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+            var cliams = result.Principal.Identities.FirstOrDefault().Claims.Select(
+                claim => new
+                {
+                    claim.Type,
+                    claim.Value,
+                    claim.Issuer,
+                    claim.OriginalIssuer
+                }
+
+            );
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        #endregion
+
+        #region Facebook Login 
+
+        public IActionResult FacebookLogin()
+        {
+            var prop = new AuthenticationProperties()
+            {
+                RedirectUri = Url.Action("FacebookResponse")
+            };
+            return Challenge(prop, FacebookDefaults.AuthenticationScheme);
+        }
+
+        public async Task<IActionResult> FacebookResponse()
+        {
+            var result = await HttpContext.AuthenticateAsync(FacebookDefaults.AuthenticationScheme);
+            var cliams = result.Principal.Identities.FirstOrDefault().Claims.Select(
+                claim => new
+                {
+                    claim.Type,
+                    claim.Value,
+                    claim.Issuer,
+                    claim.OriginalIssuer
+                }
+
+            );
+
+            return RedirectToAction("Index", "Home");
+        }
 
         #endregion
 

@@ -9,6 +9,11 @@ using Company.G00.PL.Services;
 using Company.G00.PL.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.Facebook;
+
+
 
 namespace Company.G00.PL
 {
@@ -53,7 +58,7 @@ namespace Company.G00.PL
             builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
             builder.Services.AddScoped<IMailService, MailService>();
 
-            builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection(nameof(TwilioSettings)));
+            builder.Services.Configure<TwilioSetting>(builder.Configuration.GetSection(nameof(TwilioSetting)));
             builder.Services.AddScoped<ITwilioServices,TwilioService>();
 
             builder.Services.AddIdentity<AppUser, IdentityRole>()
@@ -65,6 +70,27 @@ namespace Company.G00.PL
                 config.LoginPath = "/Account/SignIn";
                 config.AccessDeniedPath = "/Account/AccessDenied";
             });
+
+            builder.Services.AddAuthentication(o =>
+            {
+                o.DefaultAuthenticateScheme = GoogleDefaults.AuthenticationScheme;
+                o.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+            }).AddGoogle(o =>
+            {
+                o.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+                o.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+            });
+
+
+            //  builder.Services.AddAuthentication(o =>
+            //{
+            //    o.DefaultAuthenticateScheme = FacebookDefaults.AuthenticationScheme;
+            //    o.DefaultChallengeScheme = FacebookDefaults.AuthenticationScheme;
+            //}).AddFacebook(o =>
+            //{
+            //    o.ClientId = builder.Configuration["Authentication:Facebook:ClientId"];
+            //    o.ClientSecret = builder.Configuration["Authentication:Facebook:ClientSecret"];
+            //});
 
 
             var app = builder.Build();
