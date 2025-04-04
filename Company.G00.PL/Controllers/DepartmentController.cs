@@ -9,7 +9,7 @@ using NuGet.Protocol.Plugins;
 namespace Company.G00.PL.Controllers
 {
 
-    [Authorize]
+    [Authorize(Roles="Hasnaaa")]
     public class DepartmentController : Controller
     {
         //private readonly IDepartmentRepository _departmentRepository;
