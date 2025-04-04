@@ -6,13 +6,15 @@
 
 <br/>
 
-<h1>Edit Role</h1>
+<h1>Edit Page</h1>
 
 <br/>
 
 <form asp-action="Edit" enctype="multipart/form-data">
 
-    <partial name="EmployeePartialView/_CreateAndEditPartialView" />
+    <partial name="EmployeePartialView/_CreateAndEditPartialView" model="@Model"/>
+
+     <a asp-action="AddOrRemoveUser" asp-route-roleId="@Model.Id"  class="mt-3 ms-2 btn btn-success"> Add Or Remove User</a>
 
     <div>
         <input type="submit" value="Save" class="btn btn-outline-primary mt-3" />

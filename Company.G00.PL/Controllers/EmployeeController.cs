@@ -263,7 +263,6 @@ namespace Company.G00.PL.Controllers
         //}
 
 
-
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {

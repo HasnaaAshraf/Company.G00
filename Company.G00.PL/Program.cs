@@ -3,8 +3,10 @@ using Company.G00.BLL.Interfaces;
 using Company.G00.BLL.Repositories;
 using Company.G00.DAL.Data.Contexts;
 using Company.G00.DAL.Models;
+using Company.G00.PL.InterfacesHelpers;
 using Company.G00.PL.mapping;
 using Company.G00.PL.Services;
+using Company.G00.PL.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -48,13 +50,22 @@ namespace Company.G00.PL
             // Allow CLR To Make Obj For EmploeeProfile (Mapper):
             builder.Services.AddAutoMapper(M=> M.AddProfile(new EmployeeProfile()));  //Must Inherit From Profile 
 
+            builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
+            builder.Services.AddScoped<IMailService, MailService>();
+
+            builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection(nameof(TwilioSettings)));
+            builder.Services.AddScoped<ITwilioServices,TwilioService>();
+
             builder.Services.AddIdentity<AppUser, IdentityRole>()
-                            .AddEntityFrameworkStores<CompanyDbContext>();  // Allow User , Role , Authentication , EntityFrameworkStores.
+                            .AddEntityFrameworkStores<CompanyDbContext>()
+                            .AddDefaultTokenProviders();  // Allow User , Role , Authentication , EntityFrameworkStores.
 
             builder.Services.ConfigureApplicationCookie(config =>
             {
                 config.LoginPath = "/Account/SignIn";
+                config.AccessDeniedPath = "/Account/AccessDenied";
             });
+
 
             var app = builder.Build();
 
@@ -77,7 +88,7 @@ namespace Company.G00.PL
            
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Account}/{action=SignIn}/{id?}");
 
             app.Run();
         }
