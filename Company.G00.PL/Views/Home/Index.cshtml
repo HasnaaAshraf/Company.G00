@@ -1,8 +1,46 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+<div class="full-home">
+    <h1>Welcome To Home Page</h1>
 </div>
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+
+    .full-home {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #BFD8EB, #d4e6f1);
+        font-family: 'Pacifico', cursive;
+        overflow: hidden;
+    }
+
+    .full-home h1 {
+        font-size: 3rem;
+        color: #5533c4;
+        animation: floatText 3s ease-in-out infinite;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+
+    @@keyframes floatText {
+        0%, 100%
+
+    {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    }
+    }
+</style>

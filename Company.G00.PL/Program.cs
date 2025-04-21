@@ -65,21 +65,21 @@ namespace Company.G00.PL
                             .AddEntityFrameworkStores<CompanyDbContext>()
                             .AddDefaultTokenProviders();  // Allow User , Role , Authentication , EntityFrameworkStores.
 
-            builder.Services.ConfigureApplicationCookie(config =>
-            {
-                config.LoginPath = "/Account/SignIn";
-                config.AccessDeniedPath = "/Account/AccessDenied";
-            });
+            //builder.Services.ConfigureApplicationCookie(config =>
+            //{
+            //    config.LoginPath = "/Account/SignIn";
+            //    config.AccessDeniedPath = "/Account/AccessDenied";
+            //});
 
-            builder.Services.AddAuthentication(o =>
-            {
-                o.DefaultAuthenticateScheme = GoogleDefaults.AuthenticationScheme;
-                o.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-            }).AddGoogle(o =>
-            {
-                o.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-                o.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-            });
+            //builder.Services.AddAuthentication(o =>
+            //{
+            //    o.DefaultAuthenticateScheme = GoogleDefaults.AuthenticationScheme;
+            //    o.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+            //}).AddGoogle(o =>
+            //{
+            //    o.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+            //    o.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+            //});
 
 
             //  builder.Services.AddAuthentication(o =>

@@ -1,6 +1,61 @@
 ﻿@{
     ViewData["Title"] = "Privacy Policy";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+
+
+@*
+    <div class="d-flex justify-content-center align-items-center full-height">
+	<div class="privacy-policy text-center">
+		<h1>Privacy Policy</h1>
+		<br />
+		<p class="fst-italic">Use this page to detail your site's privacy policy.</p>
+
+	</div>
+</div>
+*@
+
+    <div class="d-flex justify-content-center align-items-center min-vh-100 bg-gradient-custom">
+        <div class="text-center">
+            <h1>Privacy Policy</h1>
+            <br />
+            <p class="fst-italic">Use this page to detail your site's privacy policy.</p>
+        </div>
+    </div>
+
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Arial', sans-serif;
+        overflow-x: hidden;
+        background-color:  linear-gradient(135deg, #BFD8EB, #d4e6f1);
+    }
+
+    .privacy-policy {
+        width: 100%; 
+        height: 100vh;
+        background: linear-gradient(135deg, #BFD8EB, #d4e6f1);
+        /* display: flex; */
+        /* justify-content: flex-start; /* النص يطلع على اليسار */ */
+        /* align-items: center; */
+        /* padding: 20px; */
+    }
+
+    .privacy-policy h1 {
+        font-size: 2.5rem;
+        color: #5533c4;
+        margin-bottom: 20px;
+    }
+
+    /* .privacy-policy p { */
+    /*     font-size: 1.1rem; */
+    /*     color: #333; */
+    /*     line-height: 1.8; */
+    /*     max-width: 700px; */
+    /*     text-align: left; /* لجعل النص يبدأ من اليسار */ */
+    /* } */
+</style>

@@ -1,4 +1,12 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var isFullWidth =
+     (ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" &&
+      ViewContext.RouteData.Values["Action"]?.ToString() == "Index")
+     || (ViewContext.RouteData.Values["Action"]?.ToString() == "Privacy");
+
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -14,7 +22,7 @@
 	<link href="c:\users\zone\source\repos\company.g00\company.g00.pl\views\shared\_layout.cshtml.css" rel="stylesheet" />
 	<a href="c:\users\zone\source\repos\company.g00\company.g00.pl\views\shared\_layout.cshtml"></a>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Company.G00.PL</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -53,14 +61,18 @@
         </nav>
     </header>
 
-    @* Start Body *@
-    <div class="container">
-        <main role="main" class="pb-3">
-
-            <script src="~/lib/jquery/dist/jquery.min.js"></script>
-            @RenderBody()
-        </main>
-    </div>
+    @if (isFullWidth)
+    {
+        @RenderBody()
+    }
+    else
+    {
+        <div class="container">
+            <main role="main">
+                @RenderBody()
+            </main>
+        </div>
+    }
 
     @* Start Footer *@
     <footer class="border-top footer text-muted">
